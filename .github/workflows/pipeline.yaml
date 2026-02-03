@@ -20,3 +20,9 @@ jobs:
         run: npm run eslint
       - name: Run tests
         run: npm run test
+      - name: e2e tests
+        uses: microsoft/playwright-github-action@v1
+        with:
+          run-tests: npm run test:e2e
+          start: npm run start-prod
+          wait-on: http://localhost:8080
