@@ -14,17 +14,23 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
+
       - name: Install dependencies
-        run: npm install
+        run: npm ci
+
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
+
       - name: Check code style
         run: npm run eslint
+
       - name: Run tests
         run: npm run test
       - name: Start application
         run: npm run start-prod &
+
       - name: Wait for application
         run: npx wait-on http://localhost:8080
+        
       - name: Run e2e tests
         run: npm run test:e2e
