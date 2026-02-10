@@ -1,22 +1,27 @@
-name: Deployment pipeline
+name: Deployment Pipeline
 
 on:
   push:
     branches:
       - main
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize]
 
 jobs:
-
   simple_deployment_pipeline:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: "20"
 
       - name: Install dependencies
         run: npm ci
+
+      - name: Build application
+        run: npm run build
 
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
@@ -26,12 +31,19 @@ jobs:
 
       - name: Run tests
         run: npm run test
-        
-      - name: Start application
-        run: npm run start-prod &
-
-      - name: Wait for application
-        run: npx wait-on http://localhost:8080
 
       - name: Run e2e tests
         run: npm run test:e2e
+
+  deploy:
+    needs: [simple_deployment_pipeline]
+    runs-on: ubuntu-latest
+    concurrency: deploy-group
+    if: ${{ github.event_name == 'push' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: superfly/flyctl-actions/setup-flyctl@master
+      - name: Deploy app
+        run: flyctl deploy --remote-only
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}

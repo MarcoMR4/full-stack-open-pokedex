@@ -2,12 +2,12 @@ import { defineConfig } from '@playwright/test';
 
 export default defineConfig({
   webServer: {
-    command: 'npm run start',
-    url: 'http://localhost:8080',
+    command: 'npm run start-prod',
+    url: 'http://localhost:5000',
     timeout: 120 * 1000,
     reuseExistingServer: !process.env.CI,
   },
   use: {
-    baseURL: 'http://localhost:8080/',
+    baseURL: 'http://localhost:5000/',
   },
 });
