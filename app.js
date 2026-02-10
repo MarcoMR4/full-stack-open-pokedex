@@ -1,4 +1,5 @@
 import express from 'express'
+import path from 'path'
 const app = express()
 
 // get the port from env variable
@@ -9,6 +10,10 @@ app.use(express.static('dist'))
 
 app.get('/version', (req, res) => {
   res.send(CURRENT_VERSION)
+})
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(process.cwd(), 'dist', 'index.html'))
 })
 
 app.listen(PORT, () => {})
