@@ -31,7 +31,7 @@ describe('<App />', () => {
       render(<Router><App/></Router>)
     })
     expect(screen.getByTestId('error')).toBeVisible()
-    expect(screen.queryByTestId('success')).toBeNull()
+    expect(screen.queryByText('bulbasaur')).toBeNull()
   })
 
 })
